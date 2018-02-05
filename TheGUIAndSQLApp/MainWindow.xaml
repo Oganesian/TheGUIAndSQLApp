@@ -1,0 +1,43 @@
+﻿<Controls:MetroWindow x:Class="TheGUIAndSQLApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="617.5" Width="892.3"
+        ResizeMode="CanMinimize"
+                      ShowTitleBar="True"
+        BorderThickness="0" 
+        EnableDWMDropShadow="True"
+        WindowTransitionsEnabled="False"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Trebuchet MS">
+    <Grid Margin="0,0,4,2">
+        <Menu Margin="0,0,0,0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Создать"></MenuItem>
+                <MenuItem Header="Открыть"></MenuItem>
+                <MenuItem Header="Сохранить"></MenuItem>
+                <MenuItem Header="Сохранить как..."></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Выход"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="О программе"></MenuItem>
+        </Menu>
+        <DataGrid x:Name="table" Height="332" Margin="0,31,-4,0" VerticalAlignment="Top" SelectionChanged="table_SelectionChanged">
+            <ColumnDefinition/>
+            <DataGrid.Columns>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Добавить" HorizontalAlignment="Left" Height="52" Margin="10,411,0,0" VerticalAlignment="Top" Width="181" FontSize="18"/>
+        <Button Content="Удалить" HorizontalAlignment="Left" Height="52" Margin="217,411,0,0" VerticalAlignment="Top" Width="180" FontSize="18"/>
+        <Button Content="Редактировать" HorizontalAlignment="Left" Height="52" Margin="420,411,0,0" VerticalAlignment="Top" Width="181" FontSize="18"/>
+
+        <TextBox x:Name="SQLQuery" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Поиск..." Padding="5 9 0 0" HorizontalAlignment="Left" Height="52" Margin="10,481,0,0" VerticalAlignment="Top" Width="387" FontSize="16"/>
+        <Button Content="ПОИСК" HorizontalAlignment="Left" Height="52" Margin="420,481,0,0" VerticalAlignment="Top" Width="181" FontSize="18" Click="UsingSql"/>
+        <GroupBox Header="           Фото работника" Height="209" Margin="0,368,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="169">
+            <Image x:Name="employeersPhoto" Source="C:\Users\bezim\source\repos\TheGUIAndSQLApp\TheGUIAndSQLApp\bin\Debug\employersphoto\nophoto.jpg" Margin="0,0,0,0" HorizontalAlignment="Center" Width="157" Height="169" VerticalAlignment="Center"/>
+        </GroupBox>
+    </Grid>
+</Controls:MetroWindow>
