@@ -4,40 +4,90 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        Dialog:DialogParticipation.Register="{Binding}"
         mc:Ignorable="d"
         Title="MainWindow" Height="617.5" Width="892.3"
         ResizeMode="CanMinimize"
-                      ShowTitleBar="True"
+        ShowTitleBar="True"
         BorderThickness="0" 
         EnableDWMDropShadow="True"
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         FontFamily="Trebuchet MS">
-    <Grid Margin="0,0,4,2">
-        <Menu Margin="0,0,0,0">
-            <MenuItem Header="Файл">
-                <MenuItem Header="Создать"></MenuItem>
-                <MenuItem Header="Открыть"></MenuItem>
-                <MenuItem Header="Сохранить"></MenuItem>
-                <MenuItem Header="Сохранить как..."></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Выход"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="О программе"></MenuItem>
-        </Menu>
-        <DataGrid x:Name="table" Height="332" Margin="0,31,-4,0" VerticalAlignment="Top" SelectionChanged="table_SelectionChanged">
-            <ColumnDefinition/>
-            <DataGrid.Columns>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button Content="Добавить" HorizontalAlignment="Left" Height="52" Margin="10,411,0,0" VerticalAlignment="Top" Width="181" FontSize="18"/>
-        <Button Content="Удалить" HorizontalAlignment="Left" Height="52" Margin="217,411,0,0" VerticalAlignment="Top" Width="180" FontSize="18"/>
-        <Button Content="Редактировать" HorizontalAlignment="Left" Height="52" Margin="420,411,0,0" VerticalAlignment="Top" Width="181" FontSize="18"/>
+    <Grid Margin="0,0,0,0">
+        <Grid Margin="0,0,0,0" x:Name="MainGrid" Visibility="Visible">
+            <Menu Margin="0,0,0,0">
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Создать"></MenuItem>
+                    <MenuItem Header="Открыть"></MenuItem>
+                    <MenuItem Header="Сохранить"></MenuItem>
+                    <MenuItem Header="Сохранить как..."></MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Header="Выход"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="О программе"></MenuItem>
+            </Menu>
+            <TabControl x:Name="tabControl" Height="555" VerticalAlignment="Top" Margin="0,32,-5,0" Controls:TabControlHelper.IsUnderlined="True" Background="#FF252525" HorizontalAlignment="Left" Width="887" Controls:TabControlHelper.Underlined="SelectedTabItem" SelectionChanged="TabControl_SelectionChanged">
+                <TabItem x:Name="dataBasesTab" Header="Базы данных" Loaded="TabItem_Loaded" >
+                    <Grid Margin="0,0,0,0" Height="514" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid x:Name="dataBases" Height="334" VerticalAlignment="Top" Margin="0,10,0,0" Width="860" IsReadOnly="True">
+                            <ColumnDefinition/>
+                        </DataGrid>
+                        <Button Content="Открыть" HorizontalAlignment="Left" Height="50" Margin="78,375,0,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="DataBase_Open"/>
+                        <Button Content="Удалить" HorizontalAlignment="Left" Height="50" Margin="596,375,0,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="DataBase_Delete"/>
+                        <Button Content="Создать" Height="50" Margin="0,375,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="209" FontSize="20" Click="DataBase_Create"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Таблицы" x:Name="tablesTab">
+                    <Grid Margin="0,0,0,0" Height="514" VerticalAlignment="Top">
+                        <DataGrid x:Name="table" Height="226" Margin="446,97,130,0" VerticalAlignment="Top">
+                            <ColumnDefinition/>
+                            <DataGrid.Columns>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-        <TextBox x:Name="SQLQuery" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Поиск..." Padding="5 9 0 0" HorizontalAlignment="Left" Height="52" Margin="10,481,0,0" VerticalAlignment="Top" Width="387" FontSize="16"/>
-        <Button Content="ПОИСК" HorizontalAlignment="Left" Height="52" Margin="420,481,0,0" VerticalAlignment="Top" Width="181" FontSize="18" Click="UsingSql"/>
-        <GroupBox Header="           Фото работника" Height="209" Margin="0,368,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="169">
-            <Image x:Name="employeersPhoto" Source="C:\Users\bezim\source\repos\TheGUIAndSQLApp\TheGUIAndSQLApp\bin\Debug\employersphoto\nophoto.jpg" Margin="0,0,0,0" HorizontalAlignment="Center" Width="157" Height="169" VerticalAlignment="Center"/>
-        </GroupBox>
+                        <TextBox x:Name="SQLQuery" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Поиск..." Padding="5 9 0 0" HorizontalAlignment="Left" Height="52" Margin="128,345,0,0" VerticalAlignment="Top" Width="387" FontSize="16" Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+                        <Button Content="ПОИСК" HorizontalAlignment="Left" Height="52" Margin="538,345,0,0" VerticalAlignment="Top" Width="181" FontSize="18" Click="UsingSql"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="TabItem" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="108" x:Name="SQLTab">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid x:Name="AuthGrid" Margin="0,0,0,0" Visibility="Collapsed">
+            <TextBox 
+                Margin="322,212,322,332"
+                Controls:TextBoxHelper.ClearTextButton="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.HasText), Mode=OneWay}"
+                Controls:TextBoxHelper.IsWaitingForData="True"
+                Controls:TextBoxHelper.UseFloatingWatermark="True"
+                Controls:TextBoxHelper.Watermark="Логин"
+                Style="{StaticResource LoginTextBox}">
+            </TextBox>
+            <PasswordBox
+                Margin="322,274,322,269"
+                Controls:TextBoxHelper.ClearTextButton="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.HasText), Mode=OneWay}"
+                Controls:TextBoxHelper.IsWaitingForData="True"
+                Controls:TextBoxHelper.UseFloatingWatermark="True"
+                Controls:TextBoxHelper.Watermark="Пароль"
+                Style="{StaticResource MetroButtonRevealedPasswordBox}" />
+            <Button Content="ВХОД" Height="35" Margin="322,118,322,0"  Click="Button_Click"/>
+        </Grid>
     </Grid>
+    <Window.Resources>
+        <ResourceDictionary>
+            <Dialog:CustomDialog x:Key="CustomCloseDialogTest"
+                                 x:Name="CustomCloseDialogTest"
+                                 Title="Сначала выберите базу данных">
+                <StackPanel>
+                    <Button Click="CloseCustomDialog" Content="OK" Width="150" Margin="20 0 0 0"/>
+                </StackPanel>
+            </Dialog:CustomDialog>
+        </ResourceDictionary>
+    </Window.Resources>
 </Controls:MetroWindow>
+    
