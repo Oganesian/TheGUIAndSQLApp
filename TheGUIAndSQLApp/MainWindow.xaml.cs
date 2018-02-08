@@ -27,16 +27,35 @@ namespace TheGUIAndSQLApp
     public partial class MainWindow
     {
         bool dataBaseSelected = false;
+        bool tableSelected = false;
+        string currentDataBase = "";
+        string currentTable = "";
         public MainWindow()
         {
             InitializeComponent();
             table.Items.Clear();
             dataBases.Items.Clear();
+            openedTableGrid.Items.Clear();
         }
 
-        private async void CloseCustomDialog(object sender, RoutedEventArgs e)
+        private void CloseCustomDialog(object sender, RoutedEventArgs e)
         {
-            var dialog = (BaseMetroDialog)this.Resources["CustomCloseDialogTest"];
+            CloseCustomDialogRealize(1);
+        }
+        private void CloseCustomDialog1(object sender, RoutedEventArgs e)
+        {
+            CloseCustomDialogRealize(2);
+        }
+        private async void CloseCustomDialogRealize(int id)
+        {
+            string resource = "";
+            switch (id)
+            {
+                case 1: resource = "CustomCloseDialogTest";  break;
+                case 2: resource = "CustomCloseTDialogTest"; break;
+                default: MessageBox.Show("Ошибка"); break;
+            }
+            var dialog = (BaseMetroDialog)this.Resources[resource];
             await this.HideMetroDialogAsync(dialog);
         }
 
@@ -97,7 +116,7 @@ namespace TheGUIAndSQLApp
                 MessageBox.Show(result.ErrorText);
             }
         }
-        private void selectDataBases()
+        public void SelectDataBases()
         {
             string sConn = @"Database = EmployeesBase; Data Source = localhost; User Id = root; Password =";
             MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
@@ -109,7 +128,6 @@ namespace TheGUIAndSQLApp
             {
                 dataBases.ItemsSource = result.ResultData.DefaultView;
                 dataBases.Columns[0].Width = dataBases.Width - 1;
-                dataBases.SelectedIndex = 0;
             }
             else
             {
@@ -126,6 +144,7 @@ namespace TheGUIAndSQLApp
             if (result.HasError == false)
             {
                 dataBaseSelected = true;
+                currentDataBase = str;
                 tabControl.SelectedIndex = 1;
                 tabControl.SelectedItem = tablesTab;
                 tablesTab.IsSelected = true;
@@ -145,22 +164,21 @@ namespace TheGUIAndSQLApp
 
         private void TabItem_Loaded(object sender, RoutedEventArgs e)
         {
-            selectDataBases();
+            SelectDataBases();
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dataBaseSelected == false && tabControl.SelectedIndex == 1)
             {
-                showChooseDBDialog();
-                tabControl.SelectedIndex = 0;
-                tabControl.SelectedItem = dataBasesTab;
-                dataBasesTab.IsSelected = true;
-                tablesTab.IsSelected = false;
-                SQLTab.IsSelected = false;
+                showChooseDialog(1);
+            }
+            if (tableSelected == false && tabControl.SelectedIndex == 2)
+            {
+                showChooseDialog(2);
             }
         }
-        private async void showChooseDBDialog()
+        private async void showChooseDialog(int type)
         {
             EventHandler<DialogStateChangedEventArgs> dialogManagerOnDialogOpened = null;
             dialogManagerOnDialogOpened = (o, args) => {
@@ -174,18 +192,32 @@ namespace TheGUIAndSQLApp
             };
             DialogManager.DialogClosed += dialogManagerOnDialogClosed;
 
-            var dialog = (BaseMetroDialog)this.Resources["CustomCloseDialogTest"];
+            BaseMetroDialog dialog;
 
-            await this.ShowMetroDialogAsync(dialog);
-            await dialog.WaitUntilUnloadedAsync();
+            switch (type)
+            {
+                case 1:
+                    dialog = (BaseMetroDialog)this.Resources["CustomCloseDialogTest"];
+                    await this.ShowMetroDialogAsync(dialog);
+                    await dialog.WaitUntilUnloadedAsync();
+                    tabControl.SelectedIndex = 0;
+                    tabControl.SelectedItem = dataBasesTab;
+                    dataBasesTab.IsSelected = true;
+                    break;
+                case 2:
+                    dialog = (BaseMetroDialog)this.Resources["CustomCloseTDialogTest"];
+                    await this.ShowMetroDialogAsync(dialog);
+                    await dialog.WaitUntilUnloadedAsync();
+                    tabControl.SelectedIndex = 1;
+                    tabControl.SelectedItem = tablesTab;
+                    tablesTab.IsSelected = true;
+                    break;
+                default: break;
+            }
         }
-
- 
 
             private async void showAcceptDropDBDialog(string dropStr)
             {
-            // This demo runs on .Net 4.0, but we're using the Microsoft.Bcl.Async package so we have async/await support
-            // The package is only used by the demo and not a dependency of the library!
             var mySettings = new MetroDialogSettings()
             {
                 AffirmativeButtonText = "Да",
@@ -199,11 +231,70 @@ namespace TheGUIAndSQLApp
             if(result == MessageDialogResult.Affirmative)
             {
                 MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(dropStr, "Data Source=localhost;User Id=root;Password=");
-                selectDataBases();
+                SelectDataBases();
             }
         }
 
         private void DataBase_Create(object sender, RoutedEventArgs e)
+        {
+            AddDataBase addDataBase = new AddDataBase();
+            addDataBase.Owner = this;
+            addDataBase.Show();
+            addDataBase.Activate();
+            this.IsEnabled = false;
+        }
+
+        private void DataBase_Update(object sender, RoutedEventArgs e)
+        {
+            SelectDataBases();
+        }
+
+        private void Table_Open(object sender, RoutedEventArgs e)
+        {
+            string str = ((DataRowView)table.SelectedItems[0]).Row[0].ToString();
+            string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
+            MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
+            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SELECT * FROM "+str, sConn);
+            if (result.HasError == false)
+            {
+                tableSelected = true;
+                currentTable = str;
+                tabControl.SelectedIndex = 2;
+                tabControl.SelectedItem = openedTable;
+                openedTable.IsSelected = true;
+                openedTableGrid.ItemsSource = result.ResultData.DefaultView;
+            }
+            else
+            {
+                MessageBox.Show(result.ErrorText);
+            }
+        }
+
+        private void Table_Create(object sender, RoutedEventArgs e)
+        {
+            AddTable addTable = new AddTable();
+            addTable.Owner = this;
+            addTable.Show();
+            addTable.Activate();
+            this.IsEnabled = false;
+        }
+
+        private void Table_Update(object sender, RoutedEventArgs e)
+        {
+            string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
+            MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
+            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW TABLES", sConn);
+            if (result.HasError == false)
+            {
+                table.ItemsSource = result.ResultData.DefaultView;
+            }
+            else
+            {
+                MessageBox.Show(result.ErrorText);
+            }
+        }
+
+        private void Table_Delete(object sender, RoutedEventArgs e)
         {
 
         }

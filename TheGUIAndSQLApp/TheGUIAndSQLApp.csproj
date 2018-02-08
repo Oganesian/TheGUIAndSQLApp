@@ -68,7 +68,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddDataBase.xaml.cs">
+      <DependentUpon>AddDataBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AddTable.xaml.cs">
+      <DependentUpon>AddTable.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskEx.cs" />
+    <Page Include="AddDataBase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AddTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="interface\Colors.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -91,7 +105,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MySqlData.cs" />
+    <Compile Include="MySqlDataC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

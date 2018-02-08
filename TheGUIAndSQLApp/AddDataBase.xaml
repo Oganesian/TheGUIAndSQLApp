@@ -1,0 +1,239 @@
+﻿<Controls:MetroWindow x:Class="TheGUIAndSQLApp.AddDataBase"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TheGUIAndSQLApp"
+        mc:Ignorable="d"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Новая база данных"
+        Height="139"
+        Width="621"
+        BorderBrush="{DynamicResource AccentColorBrush}"
+        BorderThickness="1"
+        WindowStartupLocation="CenterScreen" Closing="MetroWindow_Closing">
+    <Grid>
+        <TextBox x:Name="DBName" HorizontalAlignment="Left" Height="34" Margin="22,0,0,0"
+                 VerticalAlignment="Center" TextWrapping="Wrap" Width="245"
+                 Controls:TextBoxHelper.Watermark="Название базы данных"
+                 Controls:TextBoxHelper.AutoWatermark="True"
+                 Controls:TextBoxHelper.WatermarkAlignment="Center"
+                 Controls:TextBoxHelper.ClearTextButton="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.HasText), Mode=OneWay}"/>
+        <ComboBox x:Name="charSet" Width="200"
+                          Margin="274,0,137,0"
+                          Controls:TextBoxHelper.ClearTextButton="True"
+                          Controls:TextBoxHelper.Watermark="Кодировка"
+                          Height="34"
+                          VerticalAlignment="Center">
+            <ComboBoxItem Content="armscii8_bin" ToolTip="Армянский, Двоичный"/>
+            <ComboBoxItem Content="armscii8_general_ci" ToolTip="Армянский, регистронезависимый"/>
+            <ComboBoxItem Content="ascii_bin" ToolTip="Западно-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="ascii_general_ci" ToolTip="Западно-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="big5_bin" ToolTip="Китайский традиционный, Двоичный"/>
+            <ComboBoxItem Content="big5_chinese_ci" ToolTip="Китайский традиционный, регистронезависимый"/>
+            <ComboBoxItem Content="binary" ToolTip="Двоичный"/>
+            <ComboBoxItem Content="cp1250_bin" ToolTip="Центрально-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="cp1250_croatian_ci" ToolTip="Хорватский, регистронезависимый"/>
+            <ComboBoxItem Content="cp1250_czech_cs" ToolTip="Чешский, регистрозависымый"/>
+            <ComboBoxItem Content="cp1250_general_ci" ToolTip="Центрально-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="cp1250_polish_ci" ToolTip="Польский, регистронезависимый"/>
+            <ComboBoxItem Content="cp1251_bin" ToolTip="Кириллический (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="cp1251_bulgarian_ci" ToolTip="Болгарский, регистронезависимый"/>
+            <ComboBoxItem Content="cp1251_general_ci" ToolTip="Кириллический (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="cp1251_general_cs" ToolTip="Кириллический (многоязычный), регистрозависымый"/>
+            <ComboBoxItem Content="cp1251_ukrainian_ci" ToolTip="Украинский, регистронезависимый"/>
+            <ComboBoxItem Content="cp1256_bin" ToolTip="Арабский, Двоичный"/>
+            <ComboBoxItem Content="cp1256_general_ci" ToolTip="Арабский, регистронезависимый"/>
+            <ComboBoxItem Content="cp1257_bin" ToolTip="Балтийский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="cp1257_general_ci" ToolTip="Балтийский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="cp1257_lithuanian_ci" ToolTip="Литовский, регистронезависимый"/>
+            <ComboBoxItem Content="cp850_bin" ToolTip="Западно-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="cp850_general_ci" ToolTip="Западно-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="cp852_bin" ToolTip="Центрально-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="cp852_general_ci" ToolTip="Центрально-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="cp866_bin" ToolTip="Русский, Двоичный"/>
+            <ComboBoxItem Content="cp866_general_ci" ToolTip="Русский, регистронезависимый"/>
+            <ComboBoxItem Content="cp932_bin" ToolTip="Японский, Двоичный"/>
+            <ComboBoxItem Content="cp932_japanese_ci" ToolTip="Японский, регистронезависимый"/>
+            <ComboBoxItem Content="dec8_bin" ToolTip="Западно-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="dec8_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="eucjpms_bin" ToolTip="Японский, Двоичный"/>
+            <ComboBoxItem Content="eucjpms_japanese_ci" ToolTip="Японский, регистронезависимый"/>
+            <ComboBoxItem Content="euckr_bin" ToolTip="Корейский, Двоичный"/>
+            <ComboBoxItem Content="euckr_korean_ci" ToolTip="Корейский, регистронезависимый"/>
+            <ComboBoxItem Content="gb2312_bin" ToolTip="Китайский упрощенный, Двоичный"/>
+            <ComboBoxItem Content="gb2312_chinese_ci" ToolTip="Китайский упрощенный, регистронезависимый"/>
+            <ComboBoxItem Content="gbk_bin" ToolTip="Китайский упрощенный, Двоичный"/>
+            <ComboBoxItem Content="gbk_chinese_ci" ToolTip="Китайский упрощенный, регистронезависимый"/>
+            <ComboBoxItem Content="geostd8_bin" ToolTip="Грузинский, Двоичный"/>
+            <ComboBoxItem Content="geostd8_general_ci" ToolTip="Грузинский, регистронезависимый"/>
+            <ComboBoxItem Content="greek_bin" ToolTip="Греческий, Двоичный"/>
+            <ComboBoxItem Content="greek_general_ci" ToolTip="Греческий, регистронезависимый"/>
+            <ComboBoxItem Content="hebrew_bin" ToolTip="Иврит, Двоичный"/>
+            <ComboBoxItem Content="hebrew_general_ci" ToolTip="Иврит, регистронезависимый"/>
+            <ComboBoxItem Content="hp8_bin" ToolTip="Западно-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="hp8_english_ci" ToolTip="Английский, регистронезависимый"/>
+            <ComboBoxItem Content="keybcs2_bin" ToolTip="Чехословацкий, Двоичный"/>
+            <ComboBoxItem Content="keybcs2_general_ci" ToolTip="Чехословацкий, регистронезависимый"/>
+            <ComboBoxItem Content="koi8r_bin" ToolTip="Русский, Двоичный"/>
+            <ComboBoxItem Content="koi8r_general_ci" ToolTip="Русский, регистронезависимый"/>
+            <ComboBoxItem Content="koi8u_bin" ToolTip="Украинский, Двоичный"/>
+            <ComboBoxItem Content="koi8u_general_ci" ToolTip="Украинский, регистронезависимый"/>
+            <ComboBoxItem Content="latin1_bin" ToolTip="Западно-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="latin1_danish_ci" ToolTip="Датский, регистронезависимый"/>
+            <ComboBoxItem Content="latin1_general_ci" ToolTip="Западно-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="latin1_general_cs" ToolTip="Западно-Европейский (многоязычный), регистрозависымый"/>
+            <ComboBoxItem Content="latin1_german1_ci" ToolTip="Немецкий (словарь), регистронезависимый"/>
+            <ComboBoxItem Content="latin1_german2_ci" ToolTip="Немецкий (телефонная книга), регистронезависимый"/>
+            <ComboBoxItem Content="latin1_spanish_ci" ToolTip="Испанский, регистронезависимый"/>
+            <ComboBoxItem Content="latin1_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="latin2_bin" ToolTip="Центрально-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="latin2_croatian_ci" ToolTip="Хорватский, регистронезависимый"/>
+            <ComboBoxItem Content="latin2_czech_cs" ToolTip="Чешский, регистрозависымый"/>
+            <ComboBoxItem Content="latin2_general_ci" ToolTip="Центрально-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="latin2_hungarian_ci" ToolTip="Венгерский, регистронезависимый"/>
+            <ComboBoxItem Content="latin5_bin" ToolTip="Турецкий, Двоичный"/>
+            <ComboBoxItem Content="latin5_turkish_ci" ToolTip="Турецкий, регистронезависимый"/>
+            <ComboBoxItem Content="latin7_bin" ToolTip="Балтийский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="latin7_estonian_cs" ToolTip="Эстонский, регистрозависымый"/>
+            <ComboBoxItem Content="latin7_general_ci" ToolTip="Балтийский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="latin7_general_cs" ToolTip="Балтийский (многоязычный), регистрозависымый"/>
+            <ComboBoxItem Content="macce_bin" ToolTip="Центрально-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="macce_general_ci" ToolTip="Центрально-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="macroman_bin" ToolTip="Западно-Европейский (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="macroman_general_ci" ToolTip="Западно-Европейский (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="sjis_bin" ToolTip="Японский, Двоичный"/>
+            <ComboBoxItem Content="sjis_japanese_ci" ToolTip="Японский, регистронезависимый"/>
+            <ComboBoxItem Content="swe7_bin" ToolTip="Шведский, Двоичный"/>
+            <ComboBoxItem Content="swe7_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="tis620_bin" ToolTip="Таи, Двоичный"/>
+            <ComboBoxItem Content="tis620_thai_ci" ToolTip="Таи, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_bin" ToolTip="Юникод (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="ucs2_czech_ci" ToolTip="Чешский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_danish_ci" ToolTip="Датский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_esperanto_ci" ToolTip="Эсперанто, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_estonian_ci" ToolTip="Эстонский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_general_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_general_mysql500_ci" ToolTip="Юникод (многоязычный)"/>
+            <ComboBoxItem Content="ucs2_hungarian_ci" ToolTip="Венгерский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_icelandic_ci" ToolTip="Исландский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_latvian_ci" ToolTip="Латвийский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_lithuanian_ci" ToolTip="Литовский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_persian_ci" ToolTip="Персидский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_polish_ci" ToolTip="Польский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_roman_ci" ToolTip="Западно-Европейский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_romanian_ci" ToolTip="Румынский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_sinhala_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_slovak_ci" ToolTip="Словацкий, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_slovenian_ci" ToolTip="Словенский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_spanish2_ci" ToolTip="Испанский традиционный, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_spanish_ci" ToolTip="Испанский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_turkish_ci" ToolTip="Турецкий, регистронезависимый"/>
+            <ComboBoxItem Content="ucs2_unicode_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="ujis_bin" ToolTip="Японский, Двоичный"/>
+            <ComboBoxItem Content="ujis_japanese_ci" ToolTip="Японский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_bin" ToolTip="неизвестно, Двоичный"/>
+            <ComboBoxItem Content="utf16_czech_ci" ToolTip="Чешский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_danish_ci" ToolTip="Датский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_esperanto_ci" ToolTip="Эсперанто, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_estonian_ci" ToolTip="Эстонский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_general_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_hungarian_ci" ToolTip="Венгерский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_icelandic_ci" ToolTip="Исландский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_latvian_ci" ToolTip="Латвийский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_lithuanian_ci" ToolTip="Литовский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_persian_ci" ToolTip="Персидский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_polish_ci" ToolTip="Польский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_roman_ci" ToolTip="Западно-Европейский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_romanian_ci" ToolTip="Румынский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_sinhala_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_slovak_ci" ToolTip="Словацкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_slovenian_ci" ToolTip="Словенский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_spanish2_ci" ToolTip="Испанский традиционный, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_spanish_ci" ToolTip="Испанский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_turkish_ci" ToolTip="Турецкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf16_unicode_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="utf32_bin" ToolTip="неизвестно, Двоичный"/>
+            <ComboBoxItem Content="utf32_czech_ci" ToolTip="Чешский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_danish_ci" ToolTip="Датский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_esperanto_ci" ToolTip="Эсперанто, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_estonian_ci" ToolTip="Эстонский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_general_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_hungarian_ci" ToolTip="Венгерский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_icelandic_ci" ToolTip="Исландский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_latvian_ci" ToolTip="Латвийский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_lithuanian_ci" ToolTip="Литовский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_persian_ci" ToolTip="Персидский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_polish_ci" ToolTip="Польский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_roman_ci" ToolTip="Западно-Европейский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_romanian_ci" ToolTip="Румынский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_sinhala_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_slovak_ci" ToolTip="Словацкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_slovenian_ci" ToolTip="Словенский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_spanish2_ci" ToolTip="Испанский традиционный, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_spanish_ci" ToolTip="Испанский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_turkish_ci" ToolTip="Турецкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf32_unicode_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="utf8_bin" ToolTip="Юникод (многоязычный), Двоичный"/>
+            <ComboBoxItem Content="utf8_czech_ci" ToolTip="Чешский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_danish_ci" ToolTip="Датский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_esperanto_ci" ToolTip="Эсперанто, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_estonian_ci" ToolTip="Эстонский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_general_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="utf8_general_mysql500_ci" ToolTip="Юникод (многоязычный)"/>
+            <ComboBoxItem Content="utf8_hungarian_ci" ToolTip="Венгерский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_icelandic_ci" ToolTip="Исландский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_latvian_ci" ToolTip="Латвийский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_lithuanian_ci" ToolTip="Литовский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_persian_ci" ToolTip="Персидский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_polish_ci" ToolTip="Польский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_roman_ci" ToolTip="Западно-Европейский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_romanian_ci" ToolTip="Румынский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_sinhala_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_slovak_ci" ToolTip="Словацкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_slovenian_ci" ToolTip="Словенский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_spanish2_ci" ToolTip="Испанский традиционный, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_spanish_ci" ToolTip="Испанский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_turkish_ci" ToolTip="Турецкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf8_unicode_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_bin" ToolTip="неизвестно, Двоичный"/>
+            <ComboBoxItem Content="utf8mb4_czech_ci" ToolTip="Чешский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_danish_ci" ToolTip="Датский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_esperanto_ci" ToolTip="Эсперанто, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_estonian_ci" ToolTip="Эстонский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_general_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_hungarian_ci" ToolTip="Венгерский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_icelandic_ci" ToolTip="Исландский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_latvian_ci" ToolTip="Латвийский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_lithuanian_ci" ToolTip="Литовский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_persian_ci" ToolTip="Персидский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_polish_ci" ToolTip="Польский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_roman_ci" ToolTip="Западно-Европейский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_romanian_ci" ToolTip="Румынский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_sinhala_ci" ToolTip="неизвестно, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_slovak_ci" ToolTip="Словацкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_slovenian_ci" ToolTip="Словенский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_spanish2_ci" ToolTip="Испанский традиционный, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_spanish_ci" ToolTip="Испанский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_swedish_ci" ToolTip="Шведский, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_turkish_ci" ToolTip="Турецкий, регистронезависимый"/>
+            <ComboBoxItem Content="utf8mb4_unicode_ci" ToolTip="Юникод (многоязычный), регистронезависимый"/>
+
+        </ComboBox>
+        <Button Content="Создать" HorizontalAlignment="Right" Height="34" Margin="0,0,22,0" VerticalAlignment="Center" Width="108" Click="Button_Click"/>
+    </Grid>
+
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- this window should be blue -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <!-- and should use the light theme -->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>
+</Controls:MetroWindow>

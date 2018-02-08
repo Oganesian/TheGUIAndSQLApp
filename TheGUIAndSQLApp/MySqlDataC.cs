@@ -10,7 +10,7 @@ namespace MySqlLib
     /// <summary>
     /// Набор компонент для простой работы с MySQL базой данных.
     /// </summary>
-    public class MySqlData
+    public class MySqlDataC
     {
 
         /// <summary>
