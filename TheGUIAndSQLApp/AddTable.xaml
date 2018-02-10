@@ -12,7 +12,8 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"
-        Closing="MetroWindow_Closing">
+        Closing="MetroWindow_Closing"
+        ResizeMode="CanMinimize">
     <Grid>
         <TextBox x:Name="tableName" HorizontalAlignment="Left" Height="34" Margin="22,36,0,0"
                  VerticalAlignment="Top" TextWrapping="Wrap" Width="245"

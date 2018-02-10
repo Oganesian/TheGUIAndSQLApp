@@ -28,7 +28,7 @@ namespace TheGUIAndSQLApp
     {
         bool dataBaseSelected = false;
         bool tableSelected = false;
-        string currentDataBase = "";
+        public string currentDataBase = "";
         string currentTable = "";
         public MainWindow()
         {
@@ -230,8 +230,17 @@ namespace TheGUIAndSQLApp
 
             if(result == MessageDialogResult.Affirmative)
             {
-                MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(dropStr, "Data Source=localhost;User Id=root;Password=");
-                SelectDataBases();
+                if(dropStr.Contains("DROP TABLE"))
+                {
+                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(dropStr, "Database = " + currentDataBase + "; Data Source=localhost;User Id=root;Password=");
+                    updateCurrentTable();
+                }
+                else
+                {
+                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(dropStr, "Data Source=localhost;User Id=root;Password=");
+                    SelectDataBases();
+                }
+               
             }
         }
 
@@ -281,6 +290,10 @@ namespace TheGUIAndSQLApp
 
         private void Table_Update(object sender, RoutedEventArgs e)
         {
+            updateCurrentTable();
+        }
+        public void updateCurrentTable()
+        {
             string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
             MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
             result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW TABLES", sConn);
@@ -293,10 +306,11 @@ namespace TheGUIAndSQLApp
                 MessageBox.Show(result.ErrorText);
             }
         }
-
         private void Table_Delete(object sender, RoutedEventArgs e)
         {
-
+            string rowStr = "TABLESIN_" + currentDataBase.ToUpper();
+            string str = ((DataRowView)table.SelectedItems[0]).Row[0].ToString();
+            showAcceptDropDBDialog("DROP TABLE `" + str + "`");
         }
     }
 }

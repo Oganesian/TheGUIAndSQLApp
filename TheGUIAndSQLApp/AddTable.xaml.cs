@@ -36,10 +36,14 @@ namespace TheGUIAndSQLApp
                 App.Current.MainWindow.IsEnabled = true;
             }
         }
-        // TODO: realize this
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            int columnsNumberI;
+            int.TryParse(columnsNumber.Text, out columnsNumberI);
+            CreateTable create = new CreateTable(tableName.Text, columnsNumberI);
+            create.Owner = this.Owner;
+            create.Show();
+            this.Close();
         }
     }
 }
