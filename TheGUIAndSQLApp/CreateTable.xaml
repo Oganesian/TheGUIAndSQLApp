@@ -32,7 +32,6 @@
             <ComboBoxItem Content="TINYINT"/>
             <ComboBoxItem Content="SMALLINT"/>
             <ComboBoxItem Content="MEDIUMINT"/>
-            <ComboBoxItem Content="INT"/>
             <ComboBoxItem Content="BIGINT"/>
             <ComboBoxItem Content="DECIMAL"/>
             <ComboBoxItem Content="FLOAT"/>
@@ -41,15 +40,12 @@
             <ComboBoxItem Content="BIT"/>
             <ComboBoxItem Content="BOOLEAN"/>
             <ComboBoxItem Content="SERIAL"/>
-            <ComboBoxItem Content="DATE"/>
             <ComboBoxItem Content="DATETIME"/>
             <ComboBoxItem Content="TIMESTAMP"/>
             <ComboBoxItem Content="TIME"/>
             <ComboBoxItem Content="YEAR"/>
             <ComboBoxItem Content="CHAR"/>
-            <ComboBoxItem Content="VARCHAR"/>
             <ComboBoxItem Content="TINYTEXT"/>
-            <ComboBoxItem Content="TEXT"/>
             <ComboBoxItem Content="MEDIUMTEXT"/>
             <ComboBoxItem Content="LONGTEXT"/>
             <ComboBoxItem Content="BINARY"/>

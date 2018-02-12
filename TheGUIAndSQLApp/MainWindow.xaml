@@ -14,7 +14,8 @@
         EnableDWMDropShadow="True"
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
-        FontFamily="Trebuchet MS">
+        FontFamily="Trebuchet MS"
+        x:Name="MainWindowX">
     <Grid Margin="0,0,0,0">
         <Grid Margin="0,0,0,0" x:Name="MainGrid" Visibility="Visible">
             <Menu Margin="0,0,0,0">
@@ -58,18 +59,27 @@
                 </TabItem>
                 <TabItem x:Name="openedTable" Header="Содержимое" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top">
                     <Grid>
-                        <DataGrid x:Name="openedTableGrid" Height="334" VerticalAlignment="Top" Margin="0,10,0,0" Width="860" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All">
+                        <DataGrid x:Name="openedTableGrid" Height="304" VerticalAlignment="Top" Margin="0,10,0,0" Width="860" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All">
                             <ColumnDefinition/>
                             <DataGrid.Columns>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Button Content="Структура" HorizontalAlignment="Left" Height="50" Margin="12,351,0,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
-                        <Button Content="Поиск" HorizontalAlignment="Left" Height="50" Margin="662,351,0,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
-                        <Button Content="Вставка" Height="50" Margin="229,351,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="209" FontSize="20"/>
-                        <Button Content="Очистить" HorizontalAlignment="Left" Height="50" Margin="445,351,0,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
-                        <Button Content="Удалить" HorizontalAlignment="Center" Height="50" Margin="0,406,0,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
-                        <Button Content="Обновить" HorizontalAlignment="Center" Height="50" Margin="433,406,0,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
-                        <Button Content="Изменить" HorizontalAlignment="Center" Height="50" Margin="0,406,433,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
+                        <Button Content="Структура" HorizontalAlignment="Left" Height="50" Margin="12,321,0,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="showStructure"/>
+                        <Button Content="Поиск" HorizontalAlignment="Left" Height="50" Margin="662,321,0,0" VerticalAlignment="Top" Width="209" FontSize="20"/>
+                        <Button Content="Вставка" Height="50" Margin="229,321,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="209" FontSize="20"/>
+                        <Button Content="Очистить" HorizontalAlignment="Left" Height="50" Margin="445,321,0,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="truncateTable"/>
+                        <Button Content="Удалить" HorizontalAlignment="Center" Height="50" Margin="0,376,0,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="deleteTable"/>
+                        <Button Content="Обновить" HorizontalAlignment="Center" Height="50" Margin="433,376,0,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="updateTable"/>
+                        <Button Content="Изменить" HorizontalAlignment="Center" Height="50" Margin="0,376,433,0" VerticalAlignment="Top" Width="209" FontSize="20" Click="changeTable"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Структура" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top">
+                    <Grid>
+                        <DataGrid x:Name="describeTable" Height="418" VerticalAlignment="Top" Margin="12,10,11,0" Width="860" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All">
+                            <ColumnDefinition/>
+                            <DataGrid.Columns>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="TabItem" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="108">
@@ -96,8 +106,12 @@
                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                 Controls:TextBoxHelper.Watermark="Пароль"
                 Style="{StaticResource MetroButtonRevealedPasswordBox}" />
-            <Button Content="ВХОД" Height="35" Margin="322,118,322,0"  Click="Button_Click"/>
+            <Button Content="ВХОД" Height="35" Margin="322,118,322,0"  Click="Auth_Click"/>
         </Grid>
+        <StatusBar x:Name="statusBar" Grid.Row="2" Foreground="{DynamicResource BlueBrush}" Height="25" VerticalAlignment="Bottom">
+            <StatusBarItem x:Name="statusBarType" Height="25" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="15"/>
+            <StatusBarItem x:Name="statusBarSelected" Height="25" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="15"/>
+        </StatusBar>
     </Grid>
     <Window.Resources>
         <ResourceDictionary>
