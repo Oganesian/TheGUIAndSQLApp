@@ -16,7 +16,7 @@ namespace TheGUIAndSQLApp
         string tableName;
         int columnsNumber;
         int currentColumn = 0;
-        static List<string> columns = new List<string>();
+        List<string> columns = new List<string>();
         private string connectStr;
 
         public CreateTable(string tN, string connStr, string cDB, int cN)
@@ -51,7 +51,7 @@ namespace TheGUIAndSQLApp
                     {
                         index = indexCB.SelectedItem.ToString().Replace("System.Windows.Controls.ComboBoxItem: ", "");
                     }
-                    clearBoxes();
+                    ClearBoxes();
                     currentColumn++;
                 
                     Column temp = new Column(name, type, length, defaultValue, isNull, isAutoIncrementEnabled, index);
@@ -102,18 +102,18 @@ namespace TheGUIAndSQLApp
                 {
                     MessageBox.Show("Запрос выполнился без ошибок");
                     wnd.updateCurrentTable();
-                    this.Close();
                     wnd.Activate();
+                    this.Close();
                 }
                 else
                 {
                     MessageBox.Show(queryResult.ErrorText, "Возникла ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.Close();
                     wnd.Activate();
+                    this.Close();
                 }
             }
         }
-        private void clearBoxes()
+        private void ClearBoxes()
         {
             tableNameTB.Text = null;
             typeCB.SelectedItem = null;

@@ -546,7 +546,7 @@ namespace TheGUIAndSQLApp
             var mySettings = new MetroDialogSettings()
             {
                 AffirmativeButtonText = "Закрыть",
-                MaximumBodyHeight = 100,
+                MaximumBodyHeight = 50,
                 ColorScheme = MetroDialogOptions.ColorScheme
 
             };
