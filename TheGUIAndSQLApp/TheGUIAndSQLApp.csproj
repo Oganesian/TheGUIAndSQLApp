@@ -74,11 +74,14 @@
     <Compile Include="AddTable.xaml.cs">
       <DependentUpon>AddTable.xaml</DependentUpon>
     </Compile>
-    <Compile Include="changeColumn.xaml.cs">
-      <DependentUpon>changeColumn.xaml</DependentUpon>
+    <Compile Include="ChangeColumn.xaml.cs">
+      <DependentUpon>ChangeColumn.xaml</DependentUpon>
     </Compile>
     <Compile Include="CreateTable.xaml.cs">
       <DependentUpon>CreateTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FillOrSearch.xaml.cs">
+      <DependentUpon>FillOrSearch.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaskEx.cs" />
     <Page Include="AddDataBase.xaml">
@@ -89,11 +92,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="changeColumn.xaml">
+    <Page Include="ChangeColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CreateTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FillOrSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

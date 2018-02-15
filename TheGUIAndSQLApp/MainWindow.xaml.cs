@@ -1,23 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MahApps.Metro.Controls;
-using MySqlLib;
-using System.Data.SqlClient;
 using System.Data;
-using System.IO;
 using MahApps.Metro.Controls.Dialogs;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace TheGUIAndSQLApp
 {
@@ -26,10 +13,20 @@ namespace TheGUIAndSQLApp
     /// </summary>
     public partial class MainWindow
     {
+        DataColumn[] temp;
         bool dataBaseSelected = false;
         bool tableSelected = false;
-        public string currentDataBase = "";
-        string currentTable = "";
+        bool querySelected = false;
+
+        private string currentTable = "";
+
+        private string userID;
+        private string password;
+        private string host = "localhost";
+        private string currentDataBase;
+
+        private string connectStrWithDb;
+        private string connectStr;
 
         public MainWindow()
         {
@@ -38,7 +35,9 @@ namespace TheGUIAndSQLApp
             dataBases.Items.Clear();
             openedTableGrid.Items.Clear();
             describeTable.Items.Clear();
+            sqlSelectGrid.Items.Clear();
         }
+
 
         private void CloseCustomDialog(object sender, RoutedEventArgs e)
         {
@@ -50,13 +49,19 @@ namespace TheGUIAndSQLApp
             CloseCustomDialogRealize(2);
         }
 
+        private void CloseCustomDialog2(object sender, RoutedEventArgs e)
+        {
+            CloseCustomDialogRealize(3);
+        }
+
         private async void CloseCustomDialogRealize(int id)
         {
             string resource = "";
             switch (id)
             {
-                case 1: resource = "CustomCloseDialogTest";  break;
+                case 1: resource = "CustomCloseDialogTest"; break;
                 case 2: resource = "CustomCloseTDialogTest"; break;
+                case 3: resource = "CustomSqlDialog"; break;
                 default: MessageBox.Show("Ошибка"); break;
             }
             var dialog = (BaseMetroDialog)this.Resources[resource];
@@ -66,37 +71,56 @@ namespace TheGUIAndSQLApp
 
         private void UsingSql(object sender, RoutedEventArgs e)
         {
-
+            if (SQLQuery.Text.StartsWith("SELECT"))
+            {
+                MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
+                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset(SQLQuery.Text, connectStrWithDb);
+                querySelected = true;
+                if (result.HasError == false)
+                {
+                    sqlSelectGrid.ItemsSource = result.ResultData.DefaultView;
+                    tabControl.SelectedIndex = 5;
+                }
+                else
+                {
+                    MessageBox.Show(result.ErrorText);
+                }
+            }
+            else
+            {
+                MySqlLib.MySqlDataC.MySqlExecute.MyResult result = new MySqlLib.MySqlDataC.MySqlExecute.MyResult();
+                result = MySqlLib.MySqlDataC.MySqlExecute.SqlNoneQuery(SQLQuery.Text, connectStrWithDb);
+                if (result.HasError == false)
+                {
+                    MessageBox.Show(result.ResultText);
+                }
+                else
+                {
+                    MessageBox.Show(result.ErrorText);
+                }
+            }
         }
 
         private void Auth_Click(object sender, RoutedEventArgs e)
         {
+            userID = loginBox.Text;
+            password = passwordBox.Password;
             AuthGrid.Visibility = Visibility.Collapsed;
+            loginBox.Text = null;
+            passwordBox.Password = null;
             MainGrid.Visibility = Visibility.Visible;
+            connectStr = @"Data Source = " + host + "; User Id = " + userID + "; Password =" + password;
+            SelectDataBases();
         }
 
-        private void selectTable()
-        {
-            string sConn = @"Database = EmployeesBase; Data Source = localhost; User Id = root; Password =";
-            MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SELECT * FROM Employees", sConn);
-            if (result.HasError == false)
-            {
-                table.ItemsSource = result.ResultData.DefaultView;
-            }
-            else
-            {
-                MessageBox.Show(result.ErrorText);
-            }
-        }
         public void SelectDataBases()
         {
-            string sConn = @"Database = EmployeesBase; Data Source = localhost; User Id = root; Password =";
             MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW DATABASES", sConn);
+            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW DATABASES", connectStr);
             if (result.HasError == false)
             {
                 dataBases.ItemsSource = result.ResultData.DefaultView;
+                dataBases.UpdateLayout();
                 dataBases.Columns[0].Width = dataBases.Width - 1;
             }
             else
@@ -113,18 +137,17 @@ namespace TheGUIAndSQLApp
             }
             else
             {
-                string str = ((DataRowView)dataBases.SelectedItems[0]).Row["DATABASE"].ToString();
-                string sConn = @"Database = " + str + "; Data Source = localhost; User Id = root; Password =";
+                currentDataBase = ((DataRowView)dataBases.SelectedItems[0]).Row["DATABASE"].ToString();
+                connectStrWithDb = @"Database = " + currentDataBase + "; " + connectStr;
                 MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW TABLES", sConn);
+                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW TABLES", connectStrWithDb);
                 if (result.HasError == false)
                 {
                     dataBaseSelected = true;
-                    currentDataBase = str;
                     tabControl.SelectedIndex = 1;
                     tabControl.SelectedItem = tablesTab;
                     tablesTab.IsSelected = true;
-                    table.ItemsSource = result.ResultData.DefaultView;
+                    RemovePunctiatonFromColumns(result, table);
                 }
                 else
                 {
@@ -146,11 +169,6 @@ namespace TheGUIAndSQLApp
             }
         }
 
-        private void TabItem_Loaded(object sender, RoutedEventArgs e)
-        {
-            SelectDataBases();
-        }
-
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dataBaseSelected == false && tabControl.SelectedIndex == 1)
@@ -161,6 +179,10 @@ namespace TheGUIAndSQLApp
                 tabControl.SelectedIndex == 3))
             {
                 showChooseDialog(2);
+            }
+            if (querySelected == false && tabControl.SelectedIndex == 5)
+            {
+                showChooseDialog(3);
             }
             switch (tabControl.SelectedIndex)
             {
@@ -174,19 +196,26 @@ namespace TheGUIAndSQLApp
                     statusBarType.Content = "Структура таблицы";
                     statusBarSelected.Content = currentTable;
                     break;
+                case 5:
+                    statusBar.Visibility = Visibility.Visible;
+                    statusBarType.Content = "Результат запроса";
+                    statusBarSelected.Content = currentTable;
+                    break;
                 default: statusBar.Visibility = Visibility.Collapsed; break;
             }
         }
         private async void showChooseDialog(int type)
         {
             EventHandler<DialogStateChangedEventArgs> dialogManagerOnDialogOpened = null;
-            dialogManagerOnDialogOpened = (o, args) => {
+            dialogManagerOnDialogOpened = (o, args) =>
+            {
                 DialogManager.DialogOpened -= dialogManagerOnDialogOpened;
             };
             DialogManager.DialogOpened += dialogManagerOnDialogOpened;
 
             EventHandler<DialogStateChangedEventArgs> dialogManagerOnDialogClosed = null;
-            dialogManagerOnDialogClosed = (o, args) => {
+            dialogManagerOnDialogClosed = (o, args) =>
+            {
                 DialogManager.DialogClosed -= dialogManagerOnDialogClosed;
             };
             DialogManager.DialogClosed += dialogManagerOnDialogClosed;
@@ -211,12 +240,18 @@ namespace TheGUIAndSQLApp
                     tabControl.SelectedItem = tablesTab;
                     tablesTab.IsSelected = true;
                     break;
+                case 3:
+                    dialog = (BaseMetroDialog)this.Resources["CustomSqlDialog"];
+                    await this.ShowMetroDialogAsync(dialog);
+                    await dialog.WaitUntilUnloadedAsync();
+                    tabControl.SelectedIndex = 4;
+                    break;
                 default: break;
             }
         }
 
-            private async void showAcceptDropDBDialog(string queryStr)
-            {
+        private async void showAcceptDropDBDialog(string queryStr)
+        {
             var mySettings = new MetroDialogSettings()
             {
                 AffirmativeButtonText = "Да",
@@ -227,22 +262,27 @@ namespace TheGUIAndSQLApp
             MessageDialogResult result = await this.ShowMessageAsync("Вы действительно хотите выполнить запрос?", queryStr,
                 MessageDialogStyle.AffirmativeAndNegative, mySettings);
 
-            if(result == MessageDialogResult.Affirmative)
+            if (result == MessageDialogResult.Affirmative)
             {
-                if(queryStr.Contains("DROP TABLE `") || queryStr.Contains("TRUNCATE `"))
+                if (queryStr.Contains("DROP TABLE `"))
                 {
-                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(queryStr, "Database = " + currentDataBase + "; Data Source=localhost;User Id=root;Password=");
-                    if(tabControl.SelectedIndex == 2 || queryStr.Contains(currentTable))
+                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(queryStr, connectStrWithDb);
+                    if (tabControl.SelectedIndex == 2 || queryStr.Contains(currentTable))
                     {
                         tabControl.SelectedIndex = 1;
                         tableSelected = false;
                     }
                     updateCurrentTable();
                 }
+                else if (queryStr.Contains("TRUNCATE `"))
+                {
+                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(queryStr, connectStrWithDb);
+                    updateTable(null, null);
+                }
                 else
                 {
-                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(queryStr, "Data Source=localhost;User Id=root;Password=");
-                    if(queryStr.Contains(currentDataBase))
+                    MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(queryStr, connectStr);
+                    if (queryStr.Contains(currentDataBase))
                     {
                         tabControl.SelectedIndex = 0;
                         tableSelected = false;
@@ -255,7 +295,7 @@ namespace TheGUIAndSQLApp
 
         private void DataBase_Create(object sender, RoutedEventArgs e)
         {
-            AddDataBase addDataBase = new AddDataBase();
+            AddDataBase addDataBase = new AddDataBase(connectStr);
             addDataBase.Owner = this;
             addDataBase.Show();
             addDataBase.Activate();
@@ -275,19 +315,17 @@ namespace TheGUIAndSQLApp
             }
             else
             {
-                string str = ((DataRowView)table.SelectedItems[0]).Row[0].ToString();
-                string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
+                currentTable = ((DataRowView)table.SelectedItems[0]).Row[0].ToString();
                 MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SELECT * FROM " + str, sConn);
+                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SELECT * FROM " + currentTable, connectStrWithDb);
                 if (result.HasError == false)
                 {
                     tableSelected = true;
-                    currentTable = str;
                     tabControl.SelectedIndex = 2;
                     tabControl.SelectedItem = openedTable;
                     openedTable.IsSelected = true;
-                    openedTableGrid.ItemsSource = result.ResultData.DefaultView;
-                    describeTableFoo();
+                    RemovePunctiatonFromColumns(result, openedTableGrid);
+                    DescribeTableFoo();
                 }
                 else
                 {
@@ -296,9 +334,29 @@ namespace TheGUIAndSQLApp
             }
         }
 
+        private void RemovePunctiatonFromColumns(MySqlLib.MySqlData.MySqlExecuteData.MyResultData result, DataGrid grid)
+        {
+            temp = new DataColumn[result.ResultData.Columns.Count];
+            for (int i = 0; i < temp.Length; i++)
+            {
+                temp[i] = new DataColumn();
+                temp[i].ColumnName = result.ResultData.Columns[i].ToString();
+            }
+            string pattern = @"[\p{P}]";
+            for (int i = 0; i < result.ResultData.Columns.Count; i++)
+            {
+                result.ResultData.Columns[i].ColumnName =
+                     Regex.Replace(result.ResultData.Columns[i].ColumnName, pattern, "");
+            }
+            grid.ItemsSource = result.ResultData.DefaultView;
+            grid.UpdateLayout();
+            for (int i = 0; i < temp.Length - 1; i++)
+                grid.Columns[i].Header = temp[i].ColumnName;
+        }
+
         private void Table_Create(object sender, RoutedEventArgs e)
         {
-            AddTable addTable = new AddTable();
+            AddTable addTable = new AddTable(currentDataBase, connectStrWithDb);
             addTable.Owner = this;
             addTable.Show();
             addTable.Activate();
@@ -309,11 +367,11 @@ namespace TheGUIAndSQLApp
         {
             updateCurrentTable();
         }
+
         public void updateCurrentTable()
         {
-            string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
             MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW TABLES", sConn);
+            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SHOW TABLES", connectStrWithDb);
             if (result.HasError == false)
             {
                 table.ItemsSource = result.ResultData.DefaultView;
@@ -339,10 +397,11 @@ namespace TheGUIAndSQLApp
 
         private void showStructure(object sender, RoutedEventArgs e)
         {
-            describeTableFoo();
+            DescribeTableFoo();
             tabControl.SelectedIndex = 3;
         }
-        private void describeTableFoo()
+
+        private void DescribeTableFoo()
         {
             if (tableSelected == false)
             {
@@ -350,9 +409,8 @@ namespace TheGUIAndSQLApp
             }
             else
             {
-                string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
                 MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("DESCRIBE `" + currentTable + "`", sConn);
+                result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("DESCRIBE `" + currentTable + "`", connectStrWithDb);
                 if (result.HasError == false)
                 {
                     describeTable.ItemsSource = result.ResultData.DefaultView;
@@ -369,14 +427,13 @@ namespace TheGUIAndSQLApp
             showAcceptDropDBDialog("TRUNCATE `" + currentTable + "`");
         }
 
-        private void updateTable(object sender, RoutedEventArgs e)
+        public void updateTable(object sender, RoutedEventArgs e)
         {
-            string sConn = @"Database = " + currentDataBase + "; Data Source = localhost; User Id = root; Password =";
             MySqlLib.MySqlData.MySqlExecuteData.MyResultData result = new MySqlLib.MySqlData.MySqlExecuteData.MyResultData();
-            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SELECT * FROM " + currentTable, sConn);
+            result = MySqlLib.MySqlData.MySqlExecuteData.SqlReturnDataset("SELECT * FROM " + currentTable, connectStrWithDb);
             if (result.HasError == false)
             {
-                openedTableGrid.ItemsSource = result.ResultData.DefaultView;
+                RemovePunctiatonFromColumns(result, openedTableGrid);
             }
             else
             {
@@ -389,20 +446,28 @@ namespace TheGUIAndSQLApp
             showAcceptDropDBDialog("DROP TABLE `" + currentTable + "`");
         }
 
-
         private void changeTable(object sender, RoutedEventArgs e)
         {
-            if(openedTableGrid.SelectedItem == null)
+            if (openedTableGrid.SelectedItem == null)
             {
                 somethingAintSelected("Строка не выбрана", "Сначала выберите строку, которую хотите изменить");
             }
             else
             {
-                string[] rows = new string[openedTableGrid.Columns.Count];
-                for (int i = 0; i < openedTableGrid.Columns.Count; i++)
+                int count = openedTableGrid.Columns.Count;
+                string[] rows = new string[count];
+                string[] columns = new string[count];
+                string[] types = new string[count];
+                for (int i = 0; i < count; i++)
                 {
                     rows[i] = ((DataRowView)openedTableGrid.SelectedItem).Row[i].ToString();
+                    columns[i] = openedTableGrid.Columns[i].Header.ToString();
+                    types[i] = ((DataRowView)describeTable.Items[i]).Row[1].ToString();
                 }
+                ChangeColumn change = new ChangeColumn(currentDataBase, connectStr, currentTable, columns, types, rows);
+                change.Owner = this;
+                this.IsEnabled = false;
+                change.Show();
             }
         }
 
@@ -415,6 +480,80 @@ namespace TheGUIAndSQLApp
             };
 
             this.ShowMessageAsync(caption, text, MessageDialogStyle.Affirmative, mySettings);
+        }
+
+        private void FillTable(object sender, RoutedEventArgs e)
+        {
+            FillOrSearch(false);
+        }
+
+        private void SearchInTable(object sender, RoutedEventArgs e)
+        {
+            FillOrSearch(true);
+        }
+
+        private void FillOrSearch(bool FoS)
+        {
+            int count = openedTableGrid.Columns.Count;
+            string[] columns = new string[count];
+            string[] types = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                columns[i] = openedTableGrid.Columns[i].Header.ToString();
+                types[i] = ((DataRowView)describeTable.Items[i]).Row[1].ToString();
+            }
+            FillOrSearch fill = new FillOrSearch(currentDataBase, connectStr, connectStrWithDb, currentTable, columns, types, openedTableGrid, FoS);
+            fill.Owner = this;
+            this.IsEnabled = false;
+            fill.Show();
+        }
+
+        private async void ShowConnectDialog(object sender, RoutedEventArgs e)
+        {
+            var result = await this.ShowInputAsync("Хост (Data Source)", "Введите хост, к которому нужно подключиться");
+
+            if (result == null)
+                return;
+
+            host = result;
+
+            connectStr = @"Data Source = " + host + "; User Id = " + userID + "; Password =" + password;
+            connectStrWithDb = @"Database = " + currentDataBase + "; " + connectStr;
+        }
+
+        private void ChangeUser(object sender, RoutedEventArgs e)
+        {
+            table.ItemsSource = null;
+            dataBases.ItemsSource = null;
+            openedTableGrid.ItemsSource = null;
+            describeTable.ItemsSource = null;
+            sqlSelectGrid.ItemsSource = null;
+            dataBaseSelected = false;
+            tableSelected = false;
+            querySelected = false;
+
+            AuthGrid.Visibility = Visibility.Visible;
+            MainGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private async void About(object sender, RoutedEventArgs e)
+        {
+            var mySettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "Закрыть",
+                MaximumBodyHeight = 100,
+                ColorScheme = MetroDialogOptions.ColorScheme
+
+            };
+
+            MessageDialogResult result = await this.ShowMessageAsync("Дипломная программа", "" + string.Join(Environment.NewLine,
+                "Автор: Смочилин Михаил, МП-41"),
+                MessageDialogStyle.Affirmative, mySettings);
         }
     }
 }

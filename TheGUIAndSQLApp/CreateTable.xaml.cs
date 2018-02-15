@@ -1,17 +1,8 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace TheGUIAndSQLApp
 {
@@ -21,16 +12,20 @@ namespace TheGUIAndSQLApp
     public partial class CreateTable
     {
         private string SQLQuery = "";
+        private string currentDB;
         string tableName;
         int columnsNumber;
         int currentColumn = 0;
         static List<string> columns = new List<string>();
+        private string connectStr;
 
-        public CreateTable(string tN, int cN)
+        public CreateTable(string tN, string connStr, string cDB, int cN)
         {
             InitializeComponent();
             tableName = tN;
             columnsNumber = cN;
+            currentDB = cDB;
+            connectStr = connStr;
             currentColumnLabel.Content = "Формирование столбца " + ++currentColumn + " из " + columnsNumber;
         }
 
@@ -60,7 +55,6 @@ namespace TheGUIAndSQLApp
                     currentColumn++;
                 
                     Column temp = new Column(name, type, length, defaultValue, isNull, isAutoIncrementEnabled, index);
-                    MessageBox.Show(temp.ToString());
 
                     columns.Add(temp.ToString());
 
@@ -102,9 +96,8 @@ namespace TheGUIAndSQLApp
             if (result == MessageDialogResult.Affirmative)
             {
                 MainWindow wnd = (MainWindow)App.Current.MainWindow;
-                string currentDB = wnd.currentDataBase;
                 MySqlLib.MySqlData.MySqlExecute.MyResult queryResult =
-                MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(SQLQuery, "Database = "+currentDB+";Data Source=localhost;User Id=root;Password=");
+                MySqlLib.MySqlData.MySqlExecute.SqlNoneQuery(SQLQuery, connectStr);
                 if (queryResult.HasError == false)
                 {
                     MessageBox.Show("Запрос выполнился без ошибок");

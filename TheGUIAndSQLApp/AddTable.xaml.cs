@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace TheGUIAndSQLApp
 {
@@ -19,9 +9,14 @@ namespace TheGUIAndSQLApp
     /// </summary>
     public partial class AddTable
     {
-        public AddTable()
+        private string currentDB;
+        private string connectString;
+
+        public AddTable(string cDB, string connStr)
         {
             InitializeComponent();
+            currentDB = cDB;
+            connectString = connStr;
         }
 
         private void columnsNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -34,13 +29,14 @@ namespace TheGUIAndSQLApp
             if (App.Current.MainWindow != null)
             {
                 App.Current.MainWindow.IsEnabled = true;
+                App.Current.MainWindow.Activate();
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int columnsNumberI;
             int.TryParse(columnsNumber.Text, out columnsNumberI);
-            CreateTable create = new CreateTable(tableName.Text, columnsNumberI);
+            CreateTable create = new CreateTable(tableName.Text, connectString, currentDB, columnsNumberI);
             create.Owner = this.Owner;
             create.Show();
             this.Close();
